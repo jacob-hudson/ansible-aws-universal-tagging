@@ -3,19 +3,24 @@
 import boto3
 import botocore
 
-resource = "i-03ba8b4dde20e9a66"
+def main():
 
-client = boto3.client('ec2')
+    resource = "i-03ba8b4dde20e9a66"
 
-response = client.create_tags(
-DryRun=False,
-Resources=[
+    client = boto3.client('ec2')
+
+    response = client.create_tags(
+    DryRun=False,
+    Resources=[
     resource,
-],
-Tags=[
+    ],
+    Tags=[
     {
         'Key': 'ansible_test',
         'Value': 'new_ansible_moudle'
         },
-    ]
-)
+    ] 
+    )
+
+if __name__ == "__main__":
+    main()
