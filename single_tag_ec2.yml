@@ -1,0 +1,11 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Tag a single ec2
+      aws_tagging:
+        resource: "i-03ba8b4dde20e9a66"
+        region: "us-east-1"
+        tags:
+          - key: "imakey"
+            value: "imavalue"
