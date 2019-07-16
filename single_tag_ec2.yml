@@ -4,7 +4,7 @@
   tasks:
     - name: Tag a single ec2
       aws_tagging:
-        resource: "i-03ba8b4dde20e9a66"
+        resource: "arn:aws:ec2:us-east-1:<youraccountidhere>:instance/i-03ba8b4dde20e9a66"
         region: "us-east-1"
         tags:
           - key: "imakey"

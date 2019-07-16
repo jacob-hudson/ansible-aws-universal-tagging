@@ -7,24 +7,19 @@ import sys
 import boto3
 import botocore
 
-def tag_ec2():
+def add_tags(resource, tags):
 
-    resource = "i-03ba8b4dde20e9a66"
+    client = boto3.client('resourcegroupstaggingapi')
 
-    client = boto3.client('ec2')
+    for tag in tags:
+        response = client.tag_resources(
+            ResourceARNList=[
+            resource,
+            ],
+            Tags=tag
+        )
 
-    response = client.create_tags(
-    DryRun=False,
-    Resources=[
-    resource,
-    ],
-    Tags=[
-    {
-        'Key': 'ansible_test',
-        'Value': 'new_ansible_moudle'
-        },
-    ] 
-    )
+    return response
 
 
 def tagging(params):
@@ -33,14 +28,16 @@ def tagging(params):
     tags = params["tags"]
     region = params["region"]
 
-    return False, True, json.dumps(tags)
+    result = add_tags(resource, tags)
+
+    return False, True, result
 
 def main():
 
     fields = {
         "role": {"required": False, "type": "str"},
         "resource": {"required": True, "type": "str"},
-        "tags": {"required": True, "type": "str"},
+        "tags": {"required": True, "type": "list"},
         "region": {"required": False, "type": "str"}
     }
 
