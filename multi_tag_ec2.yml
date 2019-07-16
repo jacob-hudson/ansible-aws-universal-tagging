@@ -1,0 +1,13 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Tag an ec2 with multiple tags
+      aws_tagging:
+        resource: "arn:aws:ec2:us-east-1:ACCT_ID:instance/i-03ba8b4dde20e9a66"
+        region: "us-east-1"
+        tags:
+          - key: "imakey"
+            value: "imavalue"
+            key: "another_tag"
+            value: "1"
