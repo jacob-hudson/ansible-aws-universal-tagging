@@ -1,9 +1,7 @@
 - hosts: localhost
   tasks:
-    - name: Tag an ec2 with multiple tags
+    - name: Tag a resource with a single tag
       aws_tagging:
-        resource: "arn:aws:ec2:us-east-1:ACCT_ID:instance/i-ID"
+        resource: "first-test-trampoline-test-ansible4"
         region: "us-east-1"
-        tags:
-          - key: "imakey"
-            value: "imavalue"
+        tags: "{'imanewkey': 'imanewvalue'}"

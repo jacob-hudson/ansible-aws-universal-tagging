@@ -11,16 +11,30 @@ def add_tags(resource, tags):
 
     client = boto3.client('resourcegroupstaggingapi')
 
-    for tag in tags:
-        response = client.tag_resources(
-            ResourceARNList=[
-            resource,
-            ],
-            Tags=tag
-        )
+    response = client.tag_resources(
+        ResourceARNList=[
+        resource,
+        ],
+        Tags=tags
+    )
 
     return response
 
+def generate_arn(resource, region):
+    # get account ID
+    iam = boto3.resource('iam')
+    account_id = iam.CurrentUser().arn.split(':')[4]
+
+    if resource.startswith("i-"):
+        complete_arn = "arn:aws:ec2:" + region + ":" + account_id + ":instance/" + resource
+    elif resource.startswith("vol-"):
+        complete_arn = "arn:aws:ec2:" + region + ":" + account_id + ":volume/" + resource
+    elif resource.startswith("snap-"):
+        complete_arn = "arn:aws:ec2:" + region + ":" + account_id + ":volume/" + resource
+    else:
+        complete_arn = "arn:aws:s3:::" + resource
+
+    return complete_arn
 
 def tagging(params):
     role = False
@@ -28,16 +42,21 @@ def tagging(params):
     tags = params["tags"]
     region = params["region"]
 
+    # build complete ARN for EC2 Instances, Snapshots, and EBS Volumes
+    if not resource.startswith("awn:aws"):
+        resource = generate_arn(resource, region)
     result = add_tags(resource, tags)
 
-    return False, True, result
+    if int(result['ResponseMetadata']['HTTPStatusCode']) > 400:
+        return True, True, result
+    else:
+        return False, True, result
 
 def main():
 
     fields = {
-        "role": {"required": False, "type": "str"},
         "resource": {"required": True, "type": "str"},
-        "tags": {"required": True, "type": "list"},
+        "tags": {"required": True, "type": "dict"},
         "region": {"required": False, "type": "str"}
     }
 
