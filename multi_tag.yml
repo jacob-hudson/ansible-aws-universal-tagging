@@ -1,7 +1,14 @@
 - hosts: localhost
+  vars:
+    multi_tag: "iamanewkey:iamanewalue\nanotherone:yes"
   tasks:
+    - name: Build tag list
+      set_fact:
+        tag_dict: "{{ tag_dict|default({}) | combine( {item.split(':')[0]: item.split(':')[1]} ) }}"
+      with_items: "{{ multi_tag.splitlines() }}"
+
     - name: Tag a resource with multiple tags
       aws_tagging:
         resource: "resource"
         region: "us-east-1"
-        tags: "{'imanewkey': 'imanewvalue', 'imanewkey2' : 'imanewvalue2'}"
+        tags: "{{ tag_dict }}"

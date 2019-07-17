@@ -1,7 +1,14 @@
 - hosts: localhost
+  vars:
+    single_tag: "iamanewkey:iamanewalue"
   tasks:
+    - name: Build tag list
+      set_fact:
+        tag_dict: "{{ tag_dict|default({}) | combine( {item.split(':')[0]: item.split(':')[1]} ) }}"
+      with_items: "{{ single_tag.splitlines() }}"
+
     - name: Tag a resource with a single tag
       aws_tagging:
-        resource: "first-test-trampoline-test-ansible4"
+        resource: "resource"
         region: "us-east-1"
-        tags: "{'imanewkey': 'imanewvalue'}"
+        tags: "{{tag_dict}}"
