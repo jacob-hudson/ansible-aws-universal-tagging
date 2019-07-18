@@ -22,8 +22,8 @@ def add_tags(resource, tags):
 
 def generate_arn(resource, region):
     # get account ID
-    iam = boto3.resource('iam')
-    account_id = iam.CurrentUser().arn.split(':')[4]
+    sts = boto3.client('sts')
+    account_id = sts.get_caller_identity().get('Account')
 
     if resource.startswith("i-"):
         complete_arn = "arn:aws:ec2:" + region + ":" + account_id + ":instance/" + resource
