@@ -35,7 +35,7 @@
 - ECS
 - Elastic Beanstalk
 - Elastic File System
-Elastic Load Balancing
+- Elastic Load Balancing
 - ElastiCache
 - Elasticsearch Service
 - Elemental MediaLive
