@@ -43,7 +43,7 @@ def tagging(params):
     region = params["region"]
 
     # build complete ARN for EC2 Instances, Snapshots, and EBS Volumes
-    if not resource.startswith("awn:aws"):
+    if not resource.startswith("arn:aws"):
         resource = generate_arn(resource, region)
     result = add_tags(resource, tags)
 
